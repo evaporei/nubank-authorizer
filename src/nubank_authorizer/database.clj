@@ -4,3 +4,6 @@
 
 (defn create-account! [account]
   (swap! storage assoc :account account))
+
+(defn get-account []
+  (:account @storage))

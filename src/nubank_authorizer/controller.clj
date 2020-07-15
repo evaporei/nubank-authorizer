@@ -3,9 +3,11 @@
             [nubank-authorizer.adapters :as adapters]
             [nubank-authorizer.database :as db]))
 
-(defn create-account! [data]
-  (let [account (business-logic/create-account data)]
-    (db/create-account! account)))
+(defn create-account! [input-data]
+  (let [db-account (db/get-account)
+        output (business-logic/create-account db-account input-data)]
+    (db/create-account! (:account output))
+    output))
 
 (defn authorize-transaction! [transaction]
   (business-logic/authorize-transaction transaction))

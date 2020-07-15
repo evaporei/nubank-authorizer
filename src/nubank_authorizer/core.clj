@@ -5,4 +5,4 @@
 
 (defn -main
   [& args]
-  (ports/cli))
+  (ports/cli-stdin))

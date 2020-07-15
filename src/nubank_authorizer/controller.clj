@@ -1,9 +1,11 @@
 (ns nubank-authorizer.controller
   (:require [nubank-authorizer.business_logic :as business-logic]
-            [nubank-authorizer.adapters :as adapters]))
+            [nubank-authorizer.adapters :as adapters]
+            [nubank-authorizer.database :as db]))
 
-(defn create-account! [account]
-  (business-logic/create-account account))
+(defn create-account! [data]
+  (let [account (business-logic/create-account data)]
+    (db/create-account! account)))
 
 (defn authorize-transaction! [transaction]
   (business-logic/authorize-transaction transaction))

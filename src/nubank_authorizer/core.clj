@@ -1,18 +1,7 @@
 (ns nubank-authorizer.core
   (:gen-class)
-  (:require [clojure.data.json :as json]))
-
-(defn create-account [data]
-  data)
-
-(defn authorize-transaction [data]
-  data)
-
-(defn business-logic [data]
-  (cond
-    (contains? data :account) (create-account data)
-    (contains? data :transaction) (authorize-transaction data)
-    :else nil))
+  (:require [clojure.data.json :as json]
+            [nubank-authorizer.business_logic :refer [business-logic]]))
 
 (defn json-to-edn-adapter [json]
   (json/read-str json :key-fn keyword))

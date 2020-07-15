@@ -3,5 +3,5 @@
 
 (defn -main
   [& args]
-  (doseq [line (line-seq (java.io.BufferedReader. *in*))]
-    (println line)))
+  (doseq [input-line (line-seq (java.io.BufferedReader. *in*))]
+    (println input-line)))

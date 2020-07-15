@@ -1,7 +1,6 @@
 (ns nubank-authorizer.core
   (:gen-class)
-  (:require [nubank-authorizer.ports :as ports]
-            [nubank-authorizer.adapters :as adapters]))
+  (:require [nubank-authorizer.ports :as ports]))
 
 (defn -main
   [& args]

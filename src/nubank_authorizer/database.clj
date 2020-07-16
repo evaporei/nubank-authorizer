@@ -1,9 +1,15 @@
 (ns nubank-authorizer.database)
 
-(def storage (atom {}))
+(defrecord Database [storage])
 
-(defn create-account! [account]
-  (swap! storage assoc :account account))
+(defn new-database
+  ([]
+   (new-database {}))
+  ([storage]
+   (->Database (atom storage))))
 
-(defn get-account []
-  (:account @storage))
+(defn create-account! [db account]
+  (swap! (:storage db) assoc :account account))
+
+(defn get-account [db]
+  (:account @(:storage db)))

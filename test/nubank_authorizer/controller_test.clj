@@ -5,8 +5,9 @@
 
 (deftest integration-success
   (testing "Should perform all operations and return JSON"
-    (let [account "{\"account\":{\"activeCard\":true,\"availableLimit\":100}}"]
-      (is (= (controller (new-database) account) (str account "\n"))))))
+    (let [account "{\"account\":{\"activeCard\":true,\"availableLimit\":100}}"
+          expected "{\"account\":{\"activeCard\":true,\"availableLimit\":100},\"violations\":[]}\n"]
+      (is (= (controller (new-database) account) expected)))))
 
 (deftest integration-else
   (testing "Should perform nothing and return an empty String"

@@ -1,11 +1,11 @@
 (ns nubank-authorizer.business-logic)
 
 (defn create-account [db-account input-data]
-  "Receives the database account and the user input account,
-  if the database already has an account, it will add a key `:violations`
-  to the `input-data` with the `:account-already-initialized` in a list."
+  "Checks if `db-account` is `nil`, then returns `input-data`
+  with the `:violations` vector saying if the account was or not
+  already initialized"
   (if (nil? db-account)
-    input-data
+    (assoc input-data :violations [])
     (assoc input-data :violations [:account-already-initialized])))
 
 (defn authorize-transaction [data]

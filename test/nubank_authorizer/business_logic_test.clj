@@ -1,6 +1,6 @@
-(ns nubank-authorizer.business_logic-test
+(ns nubank-authorizer.business-logic-test
   (:require [clojure.test :refer :all]
-            [nubank-authorizer.business_logic :refer :all]))
+            [nubank-authorizer.business-logic :refer :all]))
 
 (deftest create-account-empty-database
   (testing "Should return the input when database hasn't an account"

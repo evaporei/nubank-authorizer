@@ -1,4 +1,4 @@
-(ns nubank-authorizer.business_logic)
+(ns nubank-authorizer.business-logic)
 
 (defn create-account [db-account input-data]
   "Receives the database account and the user input account,

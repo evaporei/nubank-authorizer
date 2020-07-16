@@ -1,5 +1,5 @@
 (ns nubank-authorizer.controller
-  (:require [nubank-authorizer.business_logic :as business-logic]
+  (:require [nubank-authorizer.business-logic :as business-logic]
             [nubank-authorizer.adapters :as adapters]
             [nubank-authorizer.database :as db]))
 

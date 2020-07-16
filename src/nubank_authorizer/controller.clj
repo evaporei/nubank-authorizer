@@ -9,8 +9,14 @@
     (db/create-account! storage (:account output))
     output))
 
-(defn authorize-transaction! [storage transaction]
-  (business-logic/authorize-transaction transaction))
+(defn authorize-transaction! [storage input-data]
+  (let [db-account (db/get-account storage)
+        db-transactions (db/get-transactions storage)
+        output (business-logic/authorize-transaction {:account db-account
+                                                      :transaction (:transaction input-data)
+                                                      :last-two-transactions (take 2 db-transactions)})]
+    (db/create-transaction! storage (:transaction output))
+    output))
 
 (defn routing [storage input-data]
   (cond

@@ -53,3 +53,72 @@ The output should be:
 {"account":{"activeCard":true,"availableLimit":80},"violations":[]}
 {"account":{"activeCard":true,"availableLimit":80},"violations":["insufficient-limit"]}
 ```
+
+## Architecture
+
+The code is inspired by the Hexagonal Architecture. The main layers of this project are:
+
+- ports
+- controller
+- adapters
+- business-logic
+
+The way it works is that the `ports` layer will interact with the extern world. In our case, it will handle the user input from stdin.
+
+Then the `controller` will process each line using the `adapters` layer to both: pass data to the `business-logic`, and to return back the result to the `port`.
+
+Here is a visual representation simplified:
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/15306309/87804794-c2c39280-c82a-11ea-9390-0d7a5a1806db.png" alt="hexagonal-architecture" />
+</p>
+
+The reasioning behind this is that the `business-logic` is isolated so it has no knowledge of the outside world. The advantage of this is that we can create different `ports` and `adapters` to use the same logic with different circumstances, like to process a HTTP request, a Kafka message, CLI stdin, etc.
+
+Below there is a simple explanation of each layer/namespace:
+
+### core
+
+> Entrypoint for the application.
+
+It has the `-main` function, and since we are doing a CLI program, it only calls the `cli-stdin` port.
+
+### ports
+
+> Handles the outside world.
+
+Right now it only has implementation for processing CLI stdin. This function processes the stdin by keeping only one line at once in memory, using a buffer to do this.
+
+### controller
+
+> Handles a line of user input.
+
+It has the `controller!` function which adapts both at entry and exit of it to use the pure `business-logic`.
+
+Also since the application is stateful (until the program ends), it stores the operations made in the `storage` layer.
+
+### adapters
+
+> Glues the ports entrance and exit for internal components.
+
+In our case it converts JSON to EDN and vice versa.
+
+### business-logic
+
+> Pure business logic.
+
+It doesn't have any side effects, it just purely converts some data structures to other ones by applying the business rules.
+
+### storage
+
+> Contains the Storage protocol for storing and retrieving data.
+
+### in-memory-storage
+
+> Implements the Storage protocol for in memory operations.
+
+It uses an `atom` to avoid concurrency problems.
+
+### database
+
+> Provides helper functions over the Storage protocol to deal with application entities with ease.

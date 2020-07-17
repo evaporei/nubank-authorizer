@@ -1,10 +1,26 @@
 # nubank-authorizer
 
-FIXME: description
+Challenge for Nubank's Authorizer Code Challenge.
 
 ## Installation
 
-Download from http://example.com/FIXME.
+To install the project you will need either `Docker` or `leiningen`. Also, all the comands that will be shown below will use `make`, if you don't want to install it, you can see what each one of them does on the [`Makefile`](https://github.com/otaviopace/nubank-authorizer/blob/master/Makefile) to run them directly.
+
+### Docker
+
+To build the image just run:
+
+```shell
+make docker-build
+```
+
+### Leiningen
+
+Since just `lein run` will do the trick to run the project, if you want prior dependency installation, just like the `Dockerfile` does, just do:
+
+```shell
+lein deps
+```
 
 ## Usage
 

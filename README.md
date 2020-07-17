@@ -11,7 +11,7 @@ To install the project you will need either `Docker` or `leiningen`. Also, all t
 To build the image just run:
 
 ```shell
-make build
+make build-app
 ```
 
 ### Leiningen
@@ -52,6 +52,29 @@ The output should be:
 {"account":{"activeCard":true,"availableLimit":100},"violations":[]}
 {"account":{"activeCard":true,"availableLimit":80},"violations":[]}
 {"account":{"activeCard":true,"availableLimit":80},"violations":["insufficient-limit"]}
+```
+
+## Tests
+
+To run the tests you also have two options, with `Docker` or `leiningen`.
+
+### Docker
+
+To create the image run:
+```shell
+make build-test
+```
+
+Then to run the tests do:
+```shell
+make test
+```
+
+### Leiningen
+
+To run the tests just do:
+```shell
+lein test
 ```
 
 ## Architecture

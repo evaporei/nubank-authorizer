@@ -4,5 +4,5 @@
 
 (defn -main
   "Starts the application via CLI with stdin."
-  [& args]
+  [& _]
   (ports/cli-stdin!))

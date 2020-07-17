@@ -3,8 +3,9 @@
             [nubank-authorizer.adapters :as adapters]
             [nubank-authorizer.database :as db]))
 
-(defn create-account! [storage input-data]
+(defn create-account!
   "Creates account, if it exists, returns violations with it."
+  [storage input-data]
   (let [db-account (db/get-account storage)
         output (business-logic/create-account db-account input-data)]
     (db/create-account! storage (:account output))
@@ -14,10 +15,11 @@
   "Removes `:transaction` and `:last-two-transactions` fields of a map."
   (partial #(dissoc % :transaction :last-two-transactions)))
 
-(defn authorize-transaction! [storage input-data]
+(defn authorize-transaction!
   "Authorizes a transaction, it needs an account created to work.
   It returns the account, but if any transaction rules get violated
   it will return with it the `:violations` filled."
+  [storage input-data]
   (let [db-account (db/get-account storage)
         db-transactions (db/get-transactions storage)
         output (business-logic/authorize-transaction {:account db-account
@@ -27,8 +29,9 @@
     (db/update-account! storage (:account output))
     (clean-unecessary-fields output)))
 
-(defn routing [input-data]
+(defn routing
   "Routes to appropriate controller based of map key."
+  [input-data]
   (cond
     (contains? input-data :account)
       [create-account! input-data]
@@ -37,14 +40,16 @@
     :else
       [(constantly nil) input-data]))
 
-(defn execute-controller! [storage controller-and-input]
+(defn execute-controller!
   "Executes controller with storage and user input."
+  [storage controller-and-input]
   (let [[controller input-data] controller-and-input]
       (controller storage input-data)))
 
-(defn controller! [storage input]
+(defn controller!
   "Adapts and routes the user input to the correct controller, and executes it.
   It returns the JSON string just as it received."
+  [storage input]
   (->> input
        adapters/json-to-edn
        routing

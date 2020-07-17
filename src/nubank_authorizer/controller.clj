@@ -10,6 +10,10 @@
     (db/create-account! storage (:account output))
     output))
 
+(def clean-unecessary-fields
+  "Removes `:transaction` and `:last-two-transactions` fields of a map."
+  (partial #(dissoc % :transaction :last-two-transactions)))
+
 (defn authorize-transaction! [storage input-data]
   "Authorizes a transaction, it needs an account created to work.
   It returns the account, but if any transaction rules get violated
@@ -20,7 +24,8 @@
                                                       :transaction (:transaction input-data)
                                                       :last-two-transactions (take 2 db-transactions)})]
     (db/create-transaction! storage (:transaction output))
-    output))
+    (db/update-account! storage (:account output))
+    (clean-unecessary-fields output)))
 
 (defn routing [input-data]
   "Routes to appropriate controller based of map key."

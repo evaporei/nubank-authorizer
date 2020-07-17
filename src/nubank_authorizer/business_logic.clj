@@ -81,13 +81,8 @@
         (assoc-in [:transaction :authorized] true))
     (assoc-in data [:transaction :authorized] false)))
 
-(def clean-unecessary-fields
-  "Removes `:transaction` and `:last-two-transactions` fields of a map."
-  (partial #(dissoc % :transaction :last-two-transactions)))
-
 (defn authorize-transaction [data]
   "Authorizes transaction if all rules are not violated returning the account with violations."
   (-> data
       apply-authorization-rules
-      authorize
-      clean-unecessary-fields))
+      authorize))

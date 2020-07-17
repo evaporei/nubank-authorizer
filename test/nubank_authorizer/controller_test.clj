@@ -1,7 +1,39 @@
 (ns nubank-authorizer.controller-test
   (:require [clojure.test :refer :all]
             [nubank-authorizer.controller :refer :all]
+            [nubank-authorizer.database :as db]
             [nubank-authorizer.in-memory-storage :refer [new-in-memory-storage]]))
+
+(deftest create-account-controller
+  (testing "Should perform all account operations and save it on storage"
+    (let [account {:active-card true
+                   :available-limit 100}
+          storage (new-in-memory-storage)
+          input-data {:account account}
+          expected {:account account
+                    :violations []}]
+      (is (= (create-account! storage input-data) expected))
+      (is (= (db/get-account storage) account)))))
+
+(deftest authorize-transaction-controller
+  (testing "Should perform all account operations and save it on storage"
+    (let [initial-account {:active-card true
+                           :available-limit 100}
+          storage (new-in-memory-storage {:account initial-account})
+          input-data {:transaction {:merchant "Burger King"
+                                    :amount 20
+                                    :time "2019-02-13T10:00:00.000Z"}}
+          expected-account {:active-card true
+                            :available-limit 80}
+          expected-output {:account expected-account
+                           :violations []}
+          expected-transactions [{:merchant "Burger King"
+                                  :amount 20
+                                  :time "2019-02-13T10:00:00.000Z"
+                                  :authorized true}]]
+      (is (= (authorize-transaction! storage input-data) expected-output))
+      (is (= (db/get-account storage) expected-account))
+      (is (= (db/get-transactions storage) expected-transactions)))))
 
 (deftest controller-integration-create-account-and-authorize-transaciton
   (testing "Should perform all account and transaction operations and return JSON"

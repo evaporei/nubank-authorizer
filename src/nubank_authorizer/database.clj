@@ -9,6 +9,11 @@
   "Gets account in `:account` key of Storage."
   (storage/get-key storage :account))
 
+(defn update-account! [storage new-account]
+  "Updates account in `:account` key of Storage."
+  (storage/update-key! storage :account #(merge % new-account))
+  new-account)
+
 (defn create-transaction! [storage transaction]
   "Creates transaction list or appends to existing one in Storage."
   (if (storage/has-key? storage :transactions)

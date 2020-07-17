@@ -1,7 +1,7 @@
 (ns nubank-authorizer.in-memory-storage-test
-  (:require [clojure.test :refer :all]
+  (:require [clojure.test :refer [deftest is testing]]
             [nubank-authorizer.storage :as storage]
-            [nubank-authorizer.in-memory-storage :refer :all]))
+            [nubank-authorizer.in-memory-storage :refer [new-in-memory-storage]]))
 
 (defn get-internal-storage [in-memory-storage]
   @(:storage in-memory-storage))

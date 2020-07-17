@@ -1,8 +1,8 @@
 (ns nubank-authorizer.database-test
-  (:require [clojure.test :refer :all]
+  (:require [clojure.test :refer [deftest is testing]]
             [nubank-authorizer.database :as db]
             [nubank-authorizer.storage :as storage]
-            [nubank-authorizer.in-memory-storage :refer :all]))
+            [nubank-authorizer.in-memory-storage :refer [new-in-memory-storage]]))
 
 (deftest create-account-simple
   (testing "Should create an account in storage"
@@ -30,7 +30,7 @@
       (is (= (db/create-transaction! storage transaction) transaction))
       (is (= (storage/get-key storage :transactions) [transaction])))))
 
-(deftest create-transaction-without-previous-transactions
+(deftest create-transaction-with-previous-transactions
   (testing "Should add an transaction along with previous ones in storage"
     (let [trx1 {:merchant "Burger King"
                 :amount 20

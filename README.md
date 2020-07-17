@@ -123,7 +123,7 @@ To install it go [here](https://github.com/borkdude/clj-kondo/blob/master/doc/in
 Then run the linter with:
 
 ```shell
-clj-kondo --lint src
+clj-kondo --lint src test
 ```
 
 ## Operations

@@ -1,6 +1,6 @@
 (ns nubank-authorizer.adapters-test
-  (:require [clojure.test :refer :all]
-            [nubank-authorizer.adapters :refer :all]))
+  (:require [clojure.test :refer [deftest is testing]]
+            [nubank-authorizer.adapters :refer [json-to-edn edn-to-json]]))
 
 (deftest json-to-edn-simple
   (testing "Should return simple EDN structure"

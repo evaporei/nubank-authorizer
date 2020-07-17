@@ -1,6 +1,14 @@
 (ns nubank-authorizer.business-logic-test
-  (:require [clojure.test :refer :all]
-            [nubank-authorizer.business-logic :refer :all]))
+  (:require [clojure.test :refer [deftest is testing]]
+            [nubank-authorizer.business-logic :refer [apply-authorization-rules
+                                                      authorize
+                                                      card-not-active-rule
+                                                      create-account
+                                                      doubled-transaction-rule
+                                                      has-same-payload?
+                                                      high-frequency-small-interval-rule
+                                                      insufficient-limit-rule
+                                                      is-within-two-minutes?]]))
 
 (deftest create-account-empty-database
   (testing "Should return the input when database hasn't an account"

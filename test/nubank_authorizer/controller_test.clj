@@ -1,6 +1,10 @@
 (ns nubank-authorizer.controller-test
-  (:require [clojure.test :refer :all]
-            [nubank-authorizer.controller :refer :all]
+  (:require [clojure.test :refer [deftest is testing]]
+            [nubank-authorizer.controller :refer [authorize-transaction!
+                                                  controller!
+                                                  create-account!
+                                                  execute-controller!
+                                                  routing]]
             [nubank-authorizer.database :as db]
             [nubank-authorizer.in-memory-storage :refer [new-in-memory-storage]]))
 

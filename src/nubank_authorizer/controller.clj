@@ -37,7 +37,7 @@
   (let [[controller input-data] controller-and-input]
       (controller storage input-data)))
 
-(defn controller [storage input]
+(defn controller! [storage input]
   "Adapts and routes the user input to the correct controller, and executes it.
   It returns the JSON string just as it received."
   (->> input

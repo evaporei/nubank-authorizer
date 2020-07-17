@@ -7,7 +7,7 @@
   (testing "Should perform all account operations and return JSON"
     (let [account "{\"account\":{\"activeCard\":true,\"availableLimit\":100}}"
           expected "{\"account\":{\"activeCard\":true,\"availableLimit\":100},\"violations\":[]}\n"]
-      (is (= (controller (new-in-memory-storage) account) expected)))))
+      (is (= (controller! (new-in-memory-storage) account) expected)))))
 
 (deftest integration-authorize-transaction
   (testing "Should perform all transaction operations and return JSON"
@@ -16,12 +16,12 @@
           expected-operation1 "{\"account\":{\"activeCard\":true,\"availableLimit\":100},\"violations\":[]}\n"
           transaction "{\"transaction\":{\"merchant\":\"Burger King\",\"amount\":20,\"time\":\"2019-02-13T10:00:00.000Z\"}}"
           expected-operation2 "{\"account\":{\"activeCard\":true,\"availableLimit\":80},\"violations\":[]}\n"]
-      (is (= (controller storage account) expected-operation1))
-      (is (= (controller storage transaction) expected-operation2)))))
+      (is (= (controller! storage account) expected-operation1))
+      (is (= (controller! storage transaction) expected-operation2)))))
 
 (deftest integration-else
   (testing "Should perform nothing and return an empty String"
-    (is (= (controller (new-in-memory-storage) "{\"nothing\":\"related\"}") ""))))
+    (is (= (controller! (new-in-memory-storage) "{\"nothing\":\"related\"}") ""))))
 
 (deftest routing-create-account
   (testing "Should return create-account! along with input-data"

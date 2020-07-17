@@ -16,6 +16,9 @@ Nubank's Authorizer Code Challenge.
 - [Lint](#lint)
 	- [Docker](#docker-3)
 	- [clj-kondo](#clj-kondo)
+- [Operations](#operations)
+	- [Create account](#create-account)
+	- [Authorize transaction](#authorize-transaction)
 - [Architecture](#architecture)
 	- [core](#core)
 	- [ports](#ports)
@@ -48,7 +51,7 @@ lein deps
 
 ## Usage
 
-To run you just have to pass a file via stdin that contains JSON operations in each line. There are some examples on [`input_examples`](https://github.com/otaviopace/nubank-authorizer/tree/master/input_examples) folder.
+To run you just have to pass a file via stdin that contains JSON operations in each line. There are some examples on [`input_examples`](https://github.com/otaviopace/nubank-authorizer/tree/master/input_examples) folder. If you wish to understand more about what kind of operations are supported, check the [`Operations`](#operations) section.
 
 ### Docker
 
@@ -121,6 +124,69 @@ Then run the linter with:
 
 ```shell
 clj-kondo --lint src
+```
+
+## Operations
+
+### Create account
+
+Creates the account with availableLimit and activeCard set.
+
+Rules to violations:
+
+- Once created, the account should not be updated or recreated: account-already-initialized
+
+#### Example
+
+Input:
+```
+{"account":{"activeCard":true,"availableLimit":100}}
+{"account":{"activeCard":true,"availableLimit":350}}
+```
+
+Output:
+```
+{"account":{"activeCard":true,"availableLimit":100},"violations":[]}
+{"account":{"activeCard":true,"availableLimit":350},"violations":["account-already-initialized"]}
+```
+
+### Authorize transaction
+
+Tries to authorize a transaction for a particular merchant, amount and time given the account's state and last authorized
+transactions.
+
+Rules to violations:
+
+- The transaction amount should not exceed available limit: insufficient-limit;
+- No transaction should be accepted when the card is not active: card-not-active;
+- There should not be more than 3 transactions on a 2 minute interval: high-frequency-small-interval;
+- There should not be more than 2 similar transactions (same amount and merchant) in a 2 minutes interval:
+doubled-transaction;
+
+#### Examples
+
+1. Given there is an account with `activeCard: true` and `availableLimit: 100`.
+
+Input:
+```
+{"transaction":{"merchant":"Burger King","amount":20,"time":"2019-02-13T10:00:00.000Z"}}
+```
+
+Output:
+```
+{"account":{"activeCard":true,"availableLimit":80},"violations":[]}
+```
+
+2. Given there is an account with `activeCard: true` and `availableLimit: 80`.
+
+Input:
+```
+{"transaction":{"merchant":"Habbib's","amount":90,"time":"2019-02-13T10:00:00.000Z"}}
+```
+
+Output:
+```
+{"account":{"activeCard":true,"availableLimit":80},"violations":["insufficient-limit"]}
 ```
 
 ## Architecture

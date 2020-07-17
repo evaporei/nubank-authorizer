@@ -15,4 +15,5 @@
     (contains? @storage k)))
 
 (defn new-in-memory-storage []
+  "Creates a new InMemoryStorage with an atom for concurrency safety."
   (->InMemoryStorage (atom {})))

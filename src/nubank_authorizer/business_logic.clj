@@ -38,7 +38,7 @@
   (if (nil? trx2)
     false
     (let [[date1 date2] [(:time trx1) (:time trx2)]
-          interval-in-minutes (t/in-minutes (t/interval (f/parse date1) (f/parse date2)))]
+          interval-in-minutes (t/in-minutes (t/interval (f/parse date2) (f/parse date1)))]
       (< interval-in-minutes 2))))
 
 (defn high-frequency-small-interval-rule

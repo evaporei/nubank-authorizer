@@ -71,33 +71,33 @@
   (testing "Should return true when in interval"
     (let [trx1 {:merchant "Habbib's"
                 :amount 120
-                :time "2019-02-13T11:00:00.000Z"}
+                :time "2019-02-13T11:01:30.000Z"}
           trx2 {:merchant "Habbib's"
                 :amount 120
-                :time "2019-02-13T11:01:30.000Z"}]
+                :time "2019-02-13T11:00:00.000Z"}]
       (is (= (is-within-two-minutes? trx1 trx2) true)))))
 
 (deftest is-within-two-minutes-out-of-interval
   (testing "Should return true when in interval"
     (let [trx1 {:merchant "Habbib's"
                 :amount 120
-                :time "2019-02-13T11:00:00.000Z"}
+                :time "2019-02-13T11:02:15.000Z"}
           trx2 {:merchant "Habbib's"
                 :amount 120
-                :time "2019-02-13T11:02:15.000Z"}]
+                :time "2019-02-13T11:00:00.000Z"}]
       (is (= (is-within-two-minutes? trx1 trx2) false)))))
 
 (deftest high-frequency-small-interval-rule-with-low-frequency
   (testing "Should return input when frequency is low"
     (let [trx1 {:merchant "Habbib's"
                 :amount 120
-                :time "2019-02-13T11:00:00.000Z"}
+                :time "2019-02-13T11:02:20.000Z"}
           trx2 {:merchant "Habbib's"
                 :amount 120
                 :time "2019-02-13T11:00:30.000Z"}
           trx3 {:merchant "Habbib's"
                 :amount 120
-                :time "2019-02-13T11:02:20.000Z"}
+                :time "2019-02-13T11:00:00.000Z"}
           data {:transaction trx1
                 :last-two-transactions [trx2 trx3]
                 :violations []}]
@@ -107,13 +107,13 @@
   (testing "Should return input when frequency is high"
     (let [trx1 {:merchant "Habbib's"
                 :amount 120
-                :time "2019-02-13T11:00:00.000Z"}
+                :time "2019-02-13T11:01:20.000Z"}
           trx2 {:merchant "Habbib's"
                 :amount 120
                 :time "2019-02-13T11:00:30.000Z"}
           trx3 {:merchant "Habbib's"
                 :amount 120
-                :time "2019-02-13T11:01:20.000Z"}
+                :time "2019-02-13T11:00:00.000Z"}
           data {:transaction trx1
                 :last-two-transactions [trx2 trx3]
                 :violations []}
@@ -146,13 +146,13 @@
   (testing "Should return input when transactions are different"
     (let [trx1 {:merchant "Bob's"
                 :amount 60
-                :time "2019-02-13T11:00:00.000Z"}
+                :time "2019-02-13T11:02:20.000Z"}
           trx2 {:merchant "Habbib's"
                 :amount 120
                 :time "2019-02-13T11:00:15.000Z"}
           trx3 {:merchant "Habbib's"
                 :amount 120
-                :time "2019-02-13T11:02:20.000Z"}
+                :time "2019-02-13T11:00:00.000Z"}
           data {:transaction trx1
                 :last-two-transactions [trx2 trx3]
                 :violations []}]
@@ -162,13 +162,13 @@
   (testing "Should return violation when transactions are the same"
     (let [trx1 {:merchant "Habbib's"
                 :amount 120
-                :time "2019-02-13T11:00:15.000Z"}
+                :time "2019-02-13T11:02:20.000Z"}
           trx2 {:merchant "Habbib's"
                 :amount 120
-                :time "2019-02-13T11:00:15.000Z"}
+                :time "2019-02-13T11:02:20.000Z"}
           trx3 {:merchant "Habbib's"
                 :amount 120
-                :time "2019-02-13T11:02:20.000Z"}
+                :time "2019-02-13T11:00:15.000Z"}
           data {:transaction trx1
                 :last-two-transactions [trx2 trx3]
                 :violations []}
@@ -183,13 +183,13 @@
                    :available-limit 120}
           trx1 {:merchant "Habbib's"
                 :amount 120
-                :time "2019-02-13T11:00:15.000Z"}
+                :time "2019-02-13T11:02:14.000Z"}
           trx2 {:merchant "Habbib's"
                 :amount 120
                 :time "2019-02-13T11:00:15.000Z"}
           trx3 {:merchant "Habbib's"
                 :amount 120
-                :time "2019-02-13T11:02:14.000Z"}
+                :time "2019-02-13T11:00:15.000Z"}
           data {:account account
                 :transaction trx1
                 :last-two-transactions [trx2 trx3]

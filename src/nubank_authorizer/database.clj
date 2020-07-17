@@ -13,7 +13,8 @@
   "Creates transaction list or appends to existing one in Storage."
   (if (storage/has-key? storage :transactions)
     (storage/update-key! storage :transactions #(conj % transaction))
-    (storage/insert-key! storage :transactions [transaction])))
+    (storage/insert-key! storage :transactions [transaction]))
+  transaction)
 
 (defn get-transactions [storage]
   "Gets transactions list in `:transactions` key of Storage."

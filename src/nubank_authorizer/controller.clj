@@ -8,7 +8,8 @@
   [storage input-data]
   (let [db-account (db/get-account storage)
         output (business-logic/create-account db-account input-data)]
-    (db/create-account! storage (:account output))
+    (when (nil? db-account)
+      (db/create-account! storage (:account output)))
     output))
 
 (def clean-unecessary-fields

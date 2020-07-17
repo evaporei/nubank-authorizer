@@ -6,14 +6,19 @@
 
 (deftest create-account-controller
   (testing "Should perform all account operations and save it on storage"
-    (let [account {:active-card true
-                   :available-limit 100}
+    (let [account1 {:active-card true
+                    :available-limit 100}
+          account2 {:active-card false
+                    :available-limit 90}
           storage (new-in-memory-storage)
-          input-data {:account account}
-          expected {:account account
-                    :violations []}]
-      (is (= (create-account! storage input-data) expected))
-      (is (= (db/get-account storage) account)))))
+          expected1 {:account account1
+                     :violations []}
+          expected2 {:account account2
+                     :violations [:account-already-initialized]}]
+      (is (= (create-account! storage {:account account1}) expected1))
+      (is (= (db/get-account storage) account1))
+      (is (= (create-account! storage {:account account2}) expected2))
+      (is (= (db/get-account storage) account1)))))
 
 (deftest authorize-transaction-controller
   (testing "Should perform all account operations and save it on storage"

@@ -33,21 +33,27 @@
 
 (defn is-within-two-minutes?
   "Receives two transactions which their time interval will be checked
-  if it is within two minutes."
+  if it is within two minutes. Note that `trx1` MUST be after `trx2`."
   [trx1 trx2]
-  (if (nil? trx2)
+  (if (or (nil? trx1) (nil? trx2))
     false
     (let [[date1 date2] [(:time trx1) (:time trx2)]
           interval-in-minutes (t/in-minutes (t/interval (f/parse date2) (f/parse date1)))]
       (< interval-in-minutes 2))))
 
+(defn third [coll]
+  (-> coll
+      next
+      next
+      first))
+
 (defn high-frequency-small-interval-rule
-  "Receives `:transaction`, `:last-two-transactions` and `:violations` in a map and returns it,
-  appending to `:violations` vector in the case of the last of two transactions and the new
+  "Receives `:transaction`, `:last-three-transactions` and `:violations` in a map and returns it,
+  appending to `:violations` vector in the case of the last of three transactions and the new
   transaction being within two minutes."
   [data]
-  (let [{:keys [transaction last-two-transactions]} data]
-    (if (is-within-two-minutes? transaction (last last-two-transactions))
+  (let [{:keys [transaction last-three-transactions]} data]
+    (if (is-within-two-minutes? transaction (third last-three-transactions))
       (update-in data [:violations] #(conj % :high-frequency-small-interval))
       data)))
 
@@ -59,14 +65,14 @@
     (= (:merchant trx1) (:merchant trx2))))
 
 (defn doubled-transaction-rule
-  "Receives `:transaction`, `:last-two-transactions` and `:violations` in a map and returns it,
+  "Receives `:transaction`, `:last-three-transactions` and `:violations` in a map and returns it,
   appending to `:violations` vector in the case of the first of the last two transactions and the new
   transaction being within two minutes AND they having the same payload."
   [data]
-  (let [{:keys [transaction last-two-transactions]} data]
+  (let [{:keys [transaction last-three-transactions]} data]
     (if (and
-          (is-within-two-minutes? transaction (first last-two-transactions))
-          (has-same-payload? transaction (first last-two-transactions)))
+          (is-within-two-minutes? transaction (first last-three-transactions))
+          (has-same-payload? transaction (first last-three-transactions)))
       (update-in data [:violations] #(conj % :doubled-transaction))
       data)))
 

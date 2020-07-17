@@ -14,7 +14,7 @@
 
 (def clean-unecessary-fields
   "Removes `:transaction` and `:last-two-transactions` fields of a map."
-  (partial #(dissoc % :transaction :last-two-transactions)))
+  (partial #(dissoc % :transaction :last-three-transactions)))
 
 (defn authorize-transaction!
   "Authorizes a transaction, it needs an account created to work.
@@ -25,7 +25,7 @@
         db-transactions (db/get-transactions storage)
         output (business-logic/authorize-transaction {:account db-account
                                                       :transaction (:transaction input-data)
-                                                      :last-two-transactions (take 2 db-transactions)})]
+                                                      :last-three-transactions (take 3 db-transactions)})]
     (db/create-transaction! storage (:transaction output))
     (db/update-account! storage (:account output))
     (clean-unecessary-fields output)))

@@ -89,7 +89,10 @@
 
 (deftest high-frequency-small-interval-rule-with-low-frequency
   (testing "Should return input when frequency is low"
-    (let [trx1 {:merchant "Habbib's"
+    (let [new-trx {:merchant "Habbib's"
+                   :amount 120
+                   :time "2019-02-13T11:02:50.000Z"}
+          trx1 {:merchant "Habbib's"
                 :amount 120
                 :time "2019-02-13T11:02:20.000Z"}
           trx2 {:merchant "Habbib's"
@@ -98,14 +101,17 @@
           trx3 {:merchant "Habbib's"
                 :amount 120
                 :time "2019-02-13T11:00:00.000Z"}
-          data {:transaction trx1
-                :last-two-transactions [trx2 trx3]
+          data {:transaction new-trx
+                :last-three-transactions [trx1 trx2 trx3]
                 :violations []}]
       (is (= (high-frequency-small-interval-rule data) data)))))
 
 (deftest high-frequency-small-interval-rule-with-high-frequency
   (testing "Should return input when frequency is high"
-    (let [trx1 {:merchant "Habbib's"
+    (let [new-trx {:merchant "Habbib's"
+                   :amount 120
+                   :time "2019-02-13T11:01:30.000Z"}
+          trx1 {:merchant "Habbib's"
                 :amount 120
                 :time "2019-02-13T11:01:20.000Z"}
           trx2 {:merchant "Habbib's"
@@ -114,11 +120,11 @@
           trx3 {:merchant "Habbib's"
                 :amount 120
                 :time "2019-02-13T11:00:00.000Z"}
-          data {:transaction trx1
-                :last-two-transactions [trx2 trx3]
+          data {:transaction new-trx
+                :last-three-transactions [trx1 trx2 trx3]
                 :violations []}
-          expected {:transaction trx1
-                    :last-two-transactions [trx2 trx3]
+          expected {:transaction new-trx
+                    :last-three-transactions [trx1 trx2 trx3]
                     :violations [:high-frequency-small-interval]}]
       (is (= (high-frequency-small-interval-rule data) expected)))))
 
@@ -144,36 +150,36 @@
 
 (deftest is-doubled-transaction-with-different-transactions
   (testing "Should return input when transactions are different"
-    (let [trx1 {:merchant "Bob's"
-                :amount 60
-                :time "2019-02-13T11:02:20.000Z"}
-          trx2 {:merchant "Habbib's"
+    (let [new-trx {:merchant "Bob's"
+                   :amount 60
+                   :time "2019-02-13T11:02:20.000Z"}
+          trx1 {:merchant "Habbib's"
                 :amount 120
                 :time "2019-02-13T11:00:15.000Z"}
-          trx3 {:merchant "Habbib's"
+          trx2 {:merchant "Habbib's"
                 :amount 120
                 :time "2019-02-13T11:00:00.000Z"}
-          data {:transaction trx1
-                :last-two-transactions [trx2 trx3]
+          data {:transaction new-trx
+                :last-three-transactions [trx1 trx2]
                 :violations []}]
       (is (= (doubled-transaction-rule data) data)))))
 
 (deftest is-doubled-transaction-with-the-same-transaction
   (testing "Should return violation when transactions are the same"
-    (let [trx1 {:merchant "Habbib's"
+    (let [new-trx {:merchant "Habbib's"
+                :amount 120
+                :time "2019-02-13T11:02:20.000Z"}
+          trx1 {:merchant "Habbib's"
                 :amount 120
                 :time "2019-02-13T11:02:20.000Z"}
           trx2 {:merchant "Habbib's"
                 :amount 120
-                :time "2019-02-13T11:02:20.000Z"}
-          trx3 {:merchant "Habbib's"
-                :amount 120
                 :time "2019-02-13T11:00:15.000Z"}
-          data {:transaction trx1
-                :last-two-transactions [trx2 trx3]
+          data {:transaction new-trx
+                :last-three-transactions [trx1 trx2]
                 :violations []}
-          expected {:transaction trx1
-                    :last-two-transactions [trx2 trx3]
+          expected {:transaction new-trx
+                    :last-three-transactions [trx1 trx2]
                     :violations [:doubled-transaction]}]
       (is (= (doubled-transaction-rule data) expected)))))
 
@@ -181,9 +187,12 @@
   (testing "Should return violations when multiple rules are wrong"
     (let [account {:active-card false
                    :available-limit 120}
+          new-trx {:merchant "Habbib's"
+                   :amount 120
+                   :time "2019-02-13T11:02:14.000Z"}
           trx1 {:merchant "Habbib's"
                 :amount 120
-                :time "2019-02-13T11:02:14.000Z"}
+                :time "2019-02-13T11:01:14.000Z"}
           trx2 {:merchant "Habbib's"
                 :amount 120
                 :time "2019-02-13T11:00:15.000Z"}
@@ -191,12 +200,12 @@
                 :amount 120
                 :time "2019-02-13T11:00:15.000Z"}
           data {:account account
-                :transaction trx1
-                :last-two-transactions [trx2 trx3]
+                :transaction new-trx
+                :last-three-transactions [trx1 trx2 trx3]
                 :violations []}
           expected {:account account
-                    :transaction trx1
-                    :last-two-transactions [trx2 trx3]
+                    :transaction new-trx
+                    :last-three-transactions [trx1 trx2 trx3]
                     :violations [:card-not-active :high-frequency-small-interval :doubled-transaction]}]
       (is (= (apply-authorization-rules data) expected)))))
 

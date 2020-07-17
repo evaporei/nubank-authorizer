@@ -32,10 +32,10 @@
                             :available-limit 80}
           expected-output {:account expected-account
                            :violations []}
-          expected-transactions [{:merchant "Burger King"
-                                  :amount 20
-                                  :time "2019-02-13T10:00:00.000Z"
-                                  :authorized true}]]
+          expected-transactions '({:merchant "Burger King"
+                                   :amount 20
+                                   :time "2019-02-13T10:00:00.000Z"
+                                   :authorized true})]
       (is (= (authorize-transaction! storage input-data) expected-output))
       (is (= (db/get-account storage) expected-account))
       (is (= (db/get-transactions storage) expected-transactions)))))

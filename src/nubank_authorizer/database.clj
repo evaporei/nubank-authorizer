@@ -22,7 +22,7 @@
   [storage transaction]
   (if (storage/has-key? storage :transactions)
     (storage/update-key! storage :transactions #(conj % transaction))
-    (storage/insert-key! storage :transactions [transaction]))
+    (storage/insert-key! storage :transactions (list transaction)))
   transaction)
 
 (defn get-transactions

@@ -1,24 +1,16 @@
-(ns nubank-authorizer.database)
+(ns nubank-authorizer.database
+  (:require [nubank-authorizer.storage :as storage]))
 
-(defrecord Database [storage])
+(defn create-account! [storage account]
+  (storage/insert-key! storage :account account))
 
-(defn new-database
-  ([]
-   (new-database {}))
-  ([storage]
-   (->Database (atom storage))))
+(defn get-account [storage]
+  (storage/get-key storage :account))
 
-(defn create-account! [db account]
-  (swap! (:storage db) assoc :account account))
+(defn create-transaction! [storage transaction]
+  (if (storage/has-key? storage :transactions)
+    (storage/update-key! storage :transactions #(conj % transaction))
+    (storage/insert-key! storage :transactions [])))
 
-(defn get-account [db]
-  (:account @(:storage db)))
-
-(defn create-transaction! [db transaction]
-  (let [storage (:storage db)]
-    (if (contains? @storage :transactions)
-      (swap! storage update-in [:transactions] #(conj % transaction))
-      (swap! storage assoc :transactions []))))
-
-(defn get-transactions [db]
-  (:transactions @(:storage db) []))
+(defn get-transactions [storage]
+  (storage/get-key-with-default storage :transactions []))

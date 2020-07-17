@@ -3,14 +3,8 @@
             [nubank-authorizer.controller :refer :all]
             [nubank-authorizer.in-memory-storage :refer [new-in-memory-storage]]))
 
-(deftest integration-create-account
-  (testing "Should perform all account operations and return JSON"
-    (let [account "{\"account\":{\"activeCard\":true,\"availableLimit\":100}}"
-          expected "{\"account\":{\"activeCard\":true,\"availableLimit\":100},\"violations\":[]}\n"]
-      (is (= (controller! (new-in-memory-storage) account) expected)))))
-
-(deftest integration-authorize-transaction
-  (testing "Should perform all transaction operations and return JSON"
+(deftest controller-integration-create-account-and-authorize-transaciton
+  (testing "Should perform all account and transaction operations and return JSON"
     (let [storage (new-in-memory-storage)
           account "{\"account\":{\"activeCard\":true,\"availableLimit\":100}}"
           expected-operation1 "{\"account\":{\"activeCard\":true,\"availableLimit\":100},\"violations\":[]}\n"

@@ -11,7 +11,7 @@ To install the project you will need either `Docker` or `leiningen`. Also, all t
 To build the image just run:
 
 ```shell
-make docker-build
+make build
 ```
 
 ### Leiningen
@@ -24,9 +24,35 @@ lein deps
 
 ## Usage
 
-FIXME: explanation
+To run you just have to pass a file via stdin that contains JSON operations in each line. There are some examples on [`input_examples`](https://github.com/otaviopace/nubank-authorizer/tree/master/input_examples) folder.
 
-    $ java -jar nubank-authorizer-0.1.0-standalone.jar [args]
+### Docker
+
+```shell
+make run < input_examples/0_sample
+```
+
+The output should be:
+
+```
+{"account":{"activeCard":true,"availableLimit":100},"violations":[]}
+{"account":{"activeCard":true,"availableLimit":80},"violations":[]}
+{"account":{"activeCard":true,"availableLimit":80},"violations":["insufficient-limit"]}
+```
+
+### Leiningen
+
+```shell
+lein run < input_examples/0_sample
+```
+
+The output should be:
+
+```
+{"account":{"activeCard":true,"availableLimit":100},"violations":[]}
+{"account":{"activeCard":true,"availableLimit":80},"violations":[]}
+{"account":{"activeCard":true,"availableLimit":80},"violations":["insufficient-limit"]}
+```
 
 ## Options
 

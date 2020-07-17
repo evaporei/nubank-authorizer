@@ -1,8 +1,8 @@
-docker-build:
+build:
 	@docker build -t nubank-authorizer .
 
-docker-run:
+run:
 	@docker run -i nubank-authorizer <&0
 
 
-.PHONY: docker-build docker-run
+.PHONY: build run

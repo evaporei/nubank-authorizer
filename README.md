@@ -77,6 +77,28 @@ To run the tests just do:
 lein test
 ```
 
+## Lint
+
+The project uses [`clj-kondo`](https://github.com/borkdude/clj-kondo) for linting. You can either just run it directly or use via `Docker`.
+
+### Docker
+
+Just run:
+
+```shell
+make lint
+```
+
+### clj-kondo
+
+To install it go [here](https://github.com/borkdude/clj-kondo/blob/master/doc/install.md).
+
+Then run the linter with:
+
+```shell
+clj-kondo --lint src
+```
+
 ## Architecture
 
 The code is inspired by the Hexagonal Architecture. The main layers of this project are:

@@ -10,5 +10,8 @@ build-test:
 test:
 	@docker run nubank-authorizer-test
 
+lint:
+	@docker run -v $(shell pwd)/src:/src --rm borkdude/clj-kondo clj-kondo --lint src
 
-.PHONY: build-app run build-test test
+
+.PHONY: build-app run build-test test lint

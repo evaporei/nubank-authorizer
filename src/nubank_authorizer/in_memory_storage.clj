@@ -14,6 +14,9 @@
   (has-key? [_this k]
     (contains? @storage k)))
 
-(defn new-in-memory-storage []
+(defn new-in-memory-storage
   "Creates a new InMemoryStorage with an atom for concurrency safety."
-  (->InMemoryStorage (atom {})))
+  ([]
+   (new-in-memory-storage {}))
+  ([initial-storage]
+   (->InMemoryStorage (atom initial-storage))))

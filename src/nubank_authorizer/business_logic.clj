@@ -10,7 +10,7 @@
     (assoc input-data :violations [])
     (assoc input-data :violations [:account-already-initialized])))
 
-(defn has-enough-limit? [data]
+(defn insufficient-limit-rule [data]
   "Receives `:transaction`, `:account` and `:violations` in a map
   and returns it, appending to `:violations` vector in the case
   of the transaction amount being bigger than the available account limit."
@@ -19,7 +19,7 @@
       (update-in data [:violations] #(conj % :insufficient-limit))
       data)))
 
-(defn is-card-active? [data]
+(defn card-not-active-rule [data]
   "Receives `:account` and `:violations` in a map and returns it,
   appending to `:violations` vector in the case of the account card
   being not active."
@@ -37,7 +37,7 @@
           interval-in-minutes (t/in-minutes (t/interval (f/parse date1) (f/parse date2)))]
       (< interval-in-minutes 2))))
 
-(defn is-frequency-high? [data]
+(defn high-frequency-small-interval-rule [data]
   "Receives `:transaction`, `:last-two-transactions` and `:violations` in a map and returns it,
   appending to `:violations` vector in the case of the last of two transactions and the new
   transaction being within two minutes."
@@ -52,7 +52,7 @@
     (= (:amount trx1) (:amount trx2))
     (= (:merchant trx1) (:merchant trx2))))
 
-(defn is-doubled-transaction? [data]
+(defn doubled-transaction-rule [data]
   "Receives `:transaction`, `:last-two-transactions` and `:violations` in a map and returns it,
   appending to `:violations` vector in the case of the first of the last two transactions and the new
   transaction being within two minutes AND they having the same payload."
@@ -63,15 +63,15 @@
       (update-in data [:violations] #(conj % :doubled-transaction))
       data)))
 
-(defn rules-to-violations [data]
-  "Passes through all rules and returns the same input data, only with
-  `:violations` being populated on the case of rule violations."
+(defn apply-authorization-rules [data]
+  "Passes through all authorization rules and returns the same input data,
+  only with `:violations` being populated on the case of rule violations."
   (-> data
       (assoc :violations [])
-      has-enough-limit?
-      is-card-active?
-      is-frequency-high?
-      is-doubled-transaction?))
+      insufficient-limit-rule
+      card-not-active-rule
+      high-frequency-small-interval-rule
+      doubled-transaction-rule))
 
 (defn authorize [data]
   "Authorizes `:transaction` map AND subtracts `:amount` from `:account` if no violations happened."
@@ -88,6 +88,6 @@
 (defn authorize-transaction [data]
   "Authorizes transaction if all rules are not violated returning the account with violations."
   (-> data
-      rules-to-violations
+      apply-authorization-rules
       authorize
       clean-unecessary-fields))

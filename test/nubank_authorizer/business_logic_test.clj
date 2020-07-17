@@ -22,7 +22,7 @@
                     :violations [:account-already-initialized]}]
       (is (= (create-account db-account account) expected)))))
 
-(deftest has-enough-limit-with-limit
+(deftest insufficient-limit-rule-with-limit
   (testing "Should return input if it has enough limit"
     (let [account {:active-card true
                    :available-limit 100}
@@ -32,7 +32,7 @@
           data {:account account
                 :transaction transaction
                 :violations []}]
-      (is (= (has-enough-limit? data) data)))))
+      (is (= (insufficient-limit-rule data) data)))))
 
 (deftest has-not-enough-limit-with-limit
   (testing "Should return violation when it has NOT enough limit"
@@ -47,17 +47,17 @@
           expected {:account account
                     :transaction transaction
                     :violations [:insufficient-limit]}]
-      (is (= (has-enough-limit? data) expected)))))
+      (is (= (insufficient-limit-rule data) expected)))))
 
-(deftest is-card-active-with-active-card
+(deftest card-not-active-rule-with-active-card
   (testing "Should return input the card is active"
     (let [account {:active-card true
                    :available-limit 100}
           data {:account account
                 :violations []}]
-      (is (= (is-card-active? data) data)))))
+      (is (= (card-not-active-rule data) data)))))
 
-(deftest is-card-active-with-inactive-card
+(deftest card-not-active-rule-with-inactive-card
   (testing "Should return violation input the card is NOT active"
     (let [account {:active-card false
                    :available-limit 100}
@@ -65,7 +65,7 @@
                 :violations []}
           expected {:account account
                     :violations [:card-not-active]}]
-      (is (= (is-card-active? data) expected)))))
+      (is (= (card-not-active-rule data) expected)))))
 
 (deftest is-within-two-minutes-within-interval
   (testing "Should return true when in interval"
@@ -87,7 +87,7 @@
                 :time "2019-02-13T11:02:15.000Z"}]
       (is (= (is-within-two-minutes? trx1 trx2) false)))))
 
-(deftest is-frequency-high-with-low-frequency
+(deftest high-frequency-small-interval-rule-with-low-frequency
   (testing "Should return input when frequency is low"
     (let [trx1 {:merchant "Habbib's"
                 :amount 120
@@ -101,9 +101,9 @@
           data {:transaction trx1
                 :last-two-transactions [trx2 trx3]
                 :violations []}]
-      (is (= (is-frequency-high? data) data)))))
+      (is (= (high-frequency-small-interval-rule data) data)))))
 
-(deftest is-frequency-high-with-high-frequency
+(deftest high-frequency-small-interval-rule-with-high-frequency
   (testing "Should return input when frequency is high"
     (let [trx1 {:merchant "Habbib's"
                 :amount 120
@@ -120,7 +120,7 @@
           expected {:transaction trx1
                     :last-two-transactions [trx2 trx3]
                     :violations [:high-frequency-small-interval]}]
-      (is (= (is-frequency-high? data) expected)))))
+      (is (= (high-frequency-small-interval-rule data) expected)))))
 
 (deftest has-same-payload-with-same-payload
   (testing "Should return true when payload is the same"
@@ -156,7 +156,7 @@
           data {:transaction trx1
                 :last-two-transactions [trx2 trx3]
                 :violations []}]
-      (is (= (is-doubled-transaction? data) data)))))
+      (is (= (doubled-transaction-rule data) data)))))
 
 (deftest is-doubled-transaction-with-the-same-transaction
   (testing "Should return violation when transactions are the same"
@@ -175,9 +175,9 @@
           expected {:transaction trx1
                     :last-two-transactions [trx2 trx3]
                     :violations [:doubled-transaction]}]
-      (is (= (is-doubled-transaction? data) expected)))))
+      (is (= (doubled-transaction-rule data) expected)))))
 
-(deftest rules-to-violations-with-multiple-violations
+(deftest apply-authorization-rules-with-multiple-rules
   (testing "Should return violations when multiple rules are wrong"
     (let [account {:active-card false
                    :available-limit 120}
@@ -198,9 +198,9 @@
                     :transaction trx1
                     :last-two-transactions [trx2 trx3]
                     :violations [:card-not-active :high-frequency-small-interval :doubled-transaction]}]
-      (is (= (rules-to-violations data) expected)))))
+      (is (= (apply-authorization-rules data) expected)))))
 
-(deftest authorize-without-violations
+(deftest authorize-without-rules
   (testing "Should return input with transaction authorized"
     (let [account {:active-card true
                    :available-limit 120}

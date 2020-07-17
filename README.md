@@ -1,10 +1,10 @@
 # nubank-authorizer
 
-Challenge for Nubank's Authorizer Code Challenge.
+Nubank's Authorizer Code Challenge.
 
 ## Installation
 
-To install the project you will need either `Docker` or `leiningen`. Also, all the comands that will be shown below will use `make`, if you don't want to install it, you can see what each one of them does on the [`Makefile`](https://github.com/otaviopace/nubank-authorizer/blob/master/Makefile) to run them directly.
+To install the project you will need either `Docker` or `leiningen`. Also, all the `Docker` comands that will be shown below will use `make`, if you don't want to install it, you can see what each one of them does on the [`Makefile`](https://github.com/otaviopace/nubank-authorizer/blob/master/Makefile) to run them directly.
 
 ### Docker
 

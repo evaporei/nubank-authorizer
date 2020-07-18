@@ -52,7 +52,7 @@
   It returns the JSON string just as it received."
   [storage input]
   (->> input
-       adapters/json-to-edn
+       adapters/json->edn
        routing
        (execute-controller! storage)
-       adapters/edn-to-json))
+       adapters/edn->json))

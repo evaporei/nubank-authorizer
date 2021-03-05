@@ -9,7 +9,7 @@
     (let [storage (new-in-memory-storage)
           account {:active-card true
                    :available-limit 100}]
-      (is (= (db/create-account! storage account) {:account account}))
+      (is (= (db/create-account storage account) {:account account}))
       (is (= (storage/get-key storage :account) account)))))
 
 (deftest get-account-simple
@@ -27,7 +27,7 @@
                        :amount 20
                        :time "2019-02-13T10:00:00.000Z"
                        :authorized true}]
-      (is (= (db/create-transaction! storage transaction) transaction))
+      (is (= (db/create-transaction storage transaction) transaction))
       (is (= (storage/get-key storage :transactions) [transaction])))))
 
 (deftest create-transaction-with-previous-transactions
@@ -41,7 +41,7 @@
                 :amount 90
                 :time "2019-02-13T10:00:00.000Z"
                 :authorized false}]
-      (is (= (db/create-transaction! storage trx2) trx2))
+      (is (= (db/create-transaction storage trx2) trx2))
       (is (= (storage/get-key storage :transactions) [trx1 trx2])))))
 
 (deftest get-transactions-when-empty

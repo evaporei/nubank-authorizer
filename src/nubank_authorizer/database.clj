@@ -1,7 +1,7 @@
 (ns nubank-authorizer.database
   (:require [nubank-authorizer.storage :as storage]))
 
-(defn create-account!
+(defn create-account
   "Adds account in `:account` key of Storage."
   [storage account]
   (storage/insert-key! storage :account account))
@@ -11,13 +11,13 @@
   [storage]
   (storage/get-key storage :account))
 
-(defn update-account!
+(defn update-account
   "Updates account in `:account` key of Storage."
   [storage new-account]
   (storage/update-key! storage :account #(merge % new-account))
   new-account)
 
-(defn create-transaction!
+(defn create-transaction
   "Creates transaction list or appends to existing one in Storage."
   [storage transaction]
   (if (storage/has-key? storage :transactions)

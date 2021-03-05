@@ -1,5 +1,4 @@
 FROM clojure:alpine AS base
-MAINTAINER Otávio Pace <otaviopp8@gmail.com>
 WORKDIR /nubank-authorizer
 COPY project.clj project.clj
 RUN lein deps

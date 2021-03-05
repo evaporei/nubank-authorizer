@@ -31,7 +31,7 @@ Nubank's Authorizer Code Challenge.
 
 ## Installation
 
-To install the project you will need either `Docker` or `leiningen`. Also, all the `Docker` comands that will be shown below will use `make`, if you don't want to install it, you can see what each one of them does on the [`Makefile`](https://github.com/otaviopace/nubank-authorizer/blob/master/Makefile) to run them directly.
+To install the project you will need either `Docker` or `leiningen`. Also, all the `Docker` comands that will be shown below will use `make`, if you don't want to install it, you can see what each one of them does on the [`Makefile`](Makefile) to run them directly.
 
 ### Docker
 
@@ -51,7 +51,7 @@ lein deps
 
 ## Usage
 
-To run you just have to pass a file via stdin that contains JSON operations in each line. There are some examples on [`input_examples`](https://github.com/otaviopace/nubank-authorizer/tree/master/input_examples) folder. If you wish to understand more about what kind of operations are supported, check the [`Operations`](#operations) section.
+To run you just have to pass a file via stdin that contains JSON operations in each line. There are some examples on [`input_examples`](input_examples) folder. If you wish to understand more about what kind of operations are supported, check the [`Operations`](#operations) section.
 
 ### Docker
 

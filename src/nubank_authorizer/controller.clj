@@ -27,7 +27,8 @@
                                                       :transaction (:transaction input-data)
                                                       :last-three-transactions (take 3 db-transactions)})]
     (db/create-transaction storage (:transaction output))
-    (db/update-account storage (:account output))
+    (when (empty? (:violations output))
+      (db/update-account storage (:account output)))
     (clean-unecessary-fields output)))
 
 (defn routing

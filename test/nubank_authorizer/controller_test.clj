@@ -17,7 +17,7 @@
           storage (new-in-memory-storage)
           expected1 {:account account1
                      :violations []}
-          expected2 {:account account2
+          expected2 {:account account1
                      :violations [:account-already-initialized]}]
       (is (= (create-account storage {:account account1}) expected1))
       (is (= (db/get-account storage) account1))

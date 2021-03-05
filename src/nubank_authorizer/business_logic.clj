@@ -9,7 +9,8 @@
   [db-account input-data]
   (if (nil? db-account)
     (assoc input-data :violations [])
-    (assoc input-data :violations [:account-already-initialized])))
+    {:account db-account
+     :violations [:account-already-initialized]}))
 
 (defn insufficient-limit-rule
   "Receives `:transaction`, `:account` and `:violations` in a map

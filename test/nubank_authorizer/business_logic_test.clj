@@ -23,8 +23,8 @@
   (testing "Should return the input with `:violations` when database already has account"
     (let [db-account {:active-card true
                       :available-limit 100}
-          account {:account {:active-card true
-                             :available-limit 100}}
+          account {:account {:active-card false
+                             :available-limit 350}}
           expected {:account {:active-card true
                               :available-limit 100}
                     :violations [:account-already-initialized]}]

@@ -8,7 +8,8 @@
                                                       has-same-payload?
                                                       high-frequency-small-interval-rule
                                                       insufficient-limit-rule
-                                                      is-within-two-minutes?]]))
+                                                      is-within-two-minutes?
+                                                      first-transaction-exceeded-limit-rule]]))
 
 (deftest create-account-empty-database
   (testing "Should return the input when database hasn't an account"
@@ -253,3 +254,51 @@
                                   :authorized false}
                     :violations [:card-not-active :insufficient-limit]}]
       (is (= (authorize data) expected)))))
+
+(deftest first-transaction-exceeded-limit-rule-test
+  (testing "When it is the first transaction"
+    (testing "And the limit exceeds"
+      (let [account {:active-card true
+                     :available-limit 100}
+            new-trx {:merchant "Habbib's"
+                     :amount 95
+                     :time "2019-02-13T11:02:14.000Z"}
+            data {:account account
+                  :transaction new-trx
+                  :first-transaction? true
+                  :violations []}
+            expected {:account account
+                      :transaction new-trx
+                      :first-transaction? true
+                      :violations [:first-transaction-exceeded-limit]}]
+      (is (= (first-transaction-exceeded-limit-rule data) expected))))
+    (testing "And the limit does NOT exceed"
+      (let [account {:active-card true
+                     :available-limit 100}
+            new-trx {:merchant "Habbib's"
+                     :amount 90
+                     :time "2019-02-13T11:02:14.000Z"}
+            data {:account account
+                  :transaction new-trx
+                  :first-transaction? true
+                  :violations []}
+            expected {:account account
+                      :transaction new-trx
+                      :first-transaction? true
+                      :violations []}]
+      (is (= (first-transaction-exceeded-limit-rule data) expected)))))
+  (testing "When it is NOT the first transaction"
+    (let [account {:active-card true
+                   :available-limit 100}
+          new-trx {:merchant "Habbib's"
+                   :amount 95
+                   :time "2019-02-13T11:02:14.000Z"}
+          data {:account account
+                :transaction new-trx
+                :first-transaction? false
+                :violations []}
+          expected {:account account
+                    :transaction new-trx
+                    :first-transaction? false
+                    :violations []}]
+    (is (= (first-transaction-exceeded-limit-rule data) expected)))))

@@ -77,6 +77,16 @@
       (update-in data [:violations] #(conj % :doubled-transaction))
       data)))
 
+(def first-transaction-threshold 0.9M)
+
+(defn first-transaction-exceeded-limit-rule
+  [{:keys [account transaction first-transaction?] :as data}]
+  (if (and
+        first-transaction?
+        (> (:amount transaction) (* first-transaction-threshold (:available-limit account))))
+    (update-in data [:violations] #(conj % :first-transaction-exceeded-limit))
+    data))
+
 (defn apply-authorization-rules
   "Passes through all authorization rules and returns the same input data,
   only with `:violations` being populated on the case of rule violations."
@@ -86,7 +96,8 @@
       insufficient-limit-rule
       card-not-active-rule
       high-frequency-small-interval-rule
-      doubled-transaction-rule))
+      doubled-transaction-rule
+      first-transaction-exceeded-limit-rule))
 
 (defn authorize
   "Authorizes `:transaction` map AND subtracts `:amount` from `:account` if no violations happened."
